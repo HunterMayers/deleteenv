@@ -2,10 +2,13 @@ pipeline {
   agent any
   
   stages {
-    stage('delete env') {
+    stage('provision env') {
       steps {
         sh '''
-          echo "Going to delete.."
+          branch=$BRANCH_NAME
+          job=`echo $JOB_NAME | cut -d/ -f1`
+          oc new-project $job-$branch
+          oc adm policy add-role-to-user admin HunterMayers -n $job-$branch
         '''
       }
     }
